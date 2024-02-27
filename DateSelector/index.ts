@@ -1,5 +1,10 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
-
+/**
+ * Author: Joe Cooney
+ * CO author: Neil Hobson
+ * Company: Microsoft
+ * Date: 27.02.2024
+ */
 export class DateSelector implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 
     /**
