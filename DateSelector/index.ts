@@ -10,13 +10,17 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     /**
      * Global Vars
      */
-    private container:HTMLDivElement;
+    //HTML
+    private body = HTMLDivElement;
     private dateselector:HTMLTextAreaElement;
     private label:HTMLLabelElement;
+    //Logic
+    private container:HTMLDivElement;
     private currentDateTime:HTMLTimeElement;
     private context:ComponentFramework.Context<IInputs>;
     private notifyOutPutChanged: () => void;
-    //private _refreshData: EventListenerOrEventListenerObject;
+    private state: ComponentFramework.Dictionary;
+    //private refreshData: EventListenerOrEventListenerObject;
     /**
      * Empty constructor.
      */
@@ -35,18 +39,22 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
      */
     public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement): void
     {
-        //control initialization code
-        //alert('hello world!');
+        //control initialization code       
         this.context = context;
         this.notifyOutPutChanged = notifyOutputChanged;
-        //state ??? - why do i need this?
+        this.state = state;
         this.container = container;
+
+        //this.body = document.createElement("div");
         this.container.style.height = '140';
         this.container.style.width = '540';
+        this.container.style.color = "Green";
+        this.container.style.backgroundColor = "Grey";
+        
 
         //Build container
         this.label = document.createElement("label");
-        this.label.innerHTML = "Date Pickers:";
+        this.label.innerHTML = context.parameters.customCSSURL.raw || "";
         this.container.appendChild(this.label);
         //this.container.innerHTML = "Not Date Picker";
     }
@@ -59,6 +67,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
         // Add code to update control view
+        //this.label.innerHTML = context.parameters.customCSSURL.raw || "";
     }
 
     /**

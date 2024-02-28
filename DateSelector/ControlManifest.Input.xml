@@ -18,7 +18,7 @@
       -->
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    <property name="sampleProperty" display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
+    <property name="customCSSURL" display-name-key="CSSURL_Display_Key" description-key="CSS URL to apply to control." of-type="SingleLine.Text" usage="bound" required="true" />
     <type-group name="numbers">
         <type>Whole.None</type>
         <type>Currency</type>
