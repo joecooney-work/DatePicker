@@ -46,8 +46,6 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.state = state;
         this.container = container;
         //#endregion
-        
-        //test of github.
 
         //this.body = document.createElement("div");
         this.container.style.height = context.parameters.customHeight.raw || "240";
