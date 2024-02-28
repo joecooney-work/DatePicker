@@ -18,7 +18,10 @@
       -->
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    <property name="customCSSURL" display-name-key="CSSURL_Display_Key" description-key="CSS URL to apply to control." of-type="SingleLine.Text" usage="bound" required="true" />
+    <property name="customCSSURL" display-name-key="CSSURL_Display_Key" description-key="CSS URL to apply to control." of-type="SingleLine.Text" usage="bound" required="false" />
+    <property name="customHeight" display-name-key="Height_Display_Key" description-key="Custom Height to apply to control." of-type="SingleLine.Text" usage="bound" required="false" />
+    <property name="customWidth" display-name-key="Width_Display_Key" description-key="Custom Width to apply to control." of-type="SingleLine.Text" usage="bound" required="false" />
+    
     <type-group name="numbers">
         <type>Whole.None</type>
         <type>Currency</type>

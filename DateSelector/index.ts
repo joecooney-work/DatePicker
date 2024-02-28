@@ -1,4 +1,5 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
+
 /**
  * Author: Joe Cooney
  * CO author: Neil Hobson
@@ -15,7 +16,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private dateselector:HTMLTextAreaElement;
     private label:HTMLLabelElement;
     //Logic
-    private container:HTMLDivElement;
+    private container:HTMLElement;
     private currentDateTime:HTMLTimeElement;
     private context:ComponentFramework.Context<IInputs>;
     private notifyOutPutChanged: () => void;
@@ -39,25 +40,30 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
      */
     public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement): void
     {
-        //control initialization code       
+        //#region - control initialization code 
         this.context = context;
         this.notifyOutPutChanged = notifyOutputChanged;
         this.state = state;
         this.container = container;
+        //#endregion
+        
 
         //this.body = document.createElement("div");
-        this.container.style.height = '140';
-        this.container.style.width = '540';
-        this.container.style.color = "Green";
-        this.container.style.backgroundColor = "Grey";
+        this.container.style.height = context.parameters.customHeight.raw || "140";
+        this.container.parentElement
+        this.container.style.width = context.parameters.customWidth.raw || "140";
+        this.container.style.color = "Black";
+        this.container.style.backgroundColor = "Blue";
         
 
         //Build container
         this.label = document.createElement("label");
-        this.label.innerHTML = context.parameters.customCSSURL.raw || "";
+        this.label.innerHTML = "Date Picker Tool:";
         this.container.appendChild(this.label);
         //this.container.innerHTML = "Not Date Picker";
+        notifyOutputChanged();
     }
+    
 
 
     /**
@@ -67,7 +73,11 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
         // Add code to update control view
-        //this.label.innerHTML = context.parameters.customCSSURL.raw || "";
+        //this.label.innerHTML = context.parameters.customCSSURL.raw || "";//label
+        this.container.innerHTML = context.parameters.customCSSURL.raw || "";//container
+        this.container.style.height = context.parameters.customHeight.raw || "140";
+        this.container.style.width = context.parameters.customWidth.raw || "140";
+        this.notifyOutPutChanged();
     }
 
     /**
