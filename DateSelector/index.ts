@@ -47,17 +47,18 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.container = container;
         //#endregion
         
+        //test of github.
 
         //this.body = document.createElement("div");
-        this.container.style.height = context.parameters.customHeight.raw || "140";
-        this.container.parentElement
-        this.container.style.width = context.parameters.customWidth.raw || "140";
+        this.container.style.height = context.parameters.customHeight.raw || "240";
+        this.container.style.width = context.parameters.customWidth.raw || "240";
         this.container.style.color = "Black";
         this.container.style.backgroundColor = "Blue";
         
 
         //Build container
         this.label = document.createElement("label");
+        this.label.className = "w-40 rounded border px-3 py-1 border-neutral-400 bg-white focus:border-sky-500 focus:outline-none focus:ring-sky-500";
         this.label.innerHTML = "Date Picker Tool:";
         this.container.appendChild(this.label);
         //this.container.innerHTML = "Not Date Picker";
@@ -74,7 +75,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     {
         // Add code to update control view
         //this.label.innerHTML = context.parameters.customCSSURL.raw || "";//label
-        this.container.innerHTML = context.parameters.customCSSURL.raw || "";//container
+        this.container.innerHTML = context.parameters.customCSSURL.raw || "I didnt find any css on the UpdateView, sorry brah.";//container
         this.container.style.height = context.parameters.customHeight.raw || "140";
         this.container.style.width = context.parameters.customWidth.raw || "140";
         this.notifyOutPutChanged();
