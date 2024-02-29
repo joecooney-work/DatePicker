@@ -45,7 +45,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.state = state;
         this.container = container;
         //#endregion
-
+        
         //this.body = document.createElement("div");
         // this.container.style.height = context.parameters.customHeight.raw || "240";
         // this.container.style.width = context.parameters.customWidth.raw || "240";
@@ -54,8 +54,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         
 
         this.createLabel();
-        this.createSelectors();
-        dateGenerator.getDayRange(2024, 2, this.container);
+        //this.createSelectors();
+        //dateGenerator.getDayRange(2024, 2, this.container);
         notifyOutputChanged();
     }
     public createLabel(): void {
@@ -91,10 +91,10 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         // Add code to update control view
         //this.label.innerHTML = context.parameters.customCSSURL.raw || "";//label
         this.container.innerHTML = context.parameters.customCSSURL.raw || "I didnt find any css on the UpdateView, sorry brah.";//container
-        this.container.style.height = context.parameters.customHeight.raw || "140";
-        this.container.style.width = context.parameters.customWidth.raw || "140";
+        this.label.style.height = context.parameters.customHeight.raw || "140";
+        this.label.style.width = context.parameters.customWidth.raw || "140";
 
-        dateGenerator.getDayRange(2024, 2, this.container);
+        //dateGenerator.getDayRange(2024, 2, this.container);
         this.notifyOutPutChanged();
     }
 
