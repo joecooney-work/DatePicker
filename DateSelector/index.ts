@@ -1,8 +1,7 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
-
+import { dateGenerator } from "./dateGenerator";
 /**
  * Author: Joe Cooney
- * CO author: Neil Hobson
  * Company: Microsoft
  * Date: 27.02.2024
  */
@@ -16,7 +15,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private dateselector:HTMLTextAreaElement;
     private label:HTMLLabelElement;
     //Logic
-    private container:HTMLElement;
+    private container:HTMLDivElement;
     private currentDateTime:HTMLTimeElement;
     private context:ComponentFramework.Context<IInputs>;
     private notifyOutPutChanged: () => void;
@@ -48,23 +47,41 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         //#endregion
 
         //this.body = document.createElement("div");
-        this.container.style.height = context.parameters.customHeight.raw || "240";
-        this.container.style.width = context.parameters.customWidth.raw || "240";
+        // this.container.style.height = context.parameters.customHeight.raw || "240";
+        // this.container.style.width = context.parameters.customWidth.raw || "240";
         this.container.style.color = "Black";
         this.container.style.backgroundColor = "Blue";
         
 
-        //Build container
-        this.label = document.createElement("label");
-        this.label.className = "w-40 rounded border px-3 py-1 border-neutral-400 bg-white focus:border-sky-500 focus:outline-none focus:ring-sky-500";
-        this.label.innerHTML = "Date Picker Tool:";
-        this.container.appendChild(this.label);
-        //this.container.innerHTML = "Not Date Picker";
+        this.createLabel();
+        this.createSelectors();
+        dateGenerator.getDayRange(2024, 2, this.container);
         notifyOutputChanged();
     }
+    public createLabel(): void {
+        //Build container
+        this.label = document.createElement("label");
+        this.label.innerHTML = "Date Picker Tool:";
+        this.container.appendChild(this.label);
+    }
+    public createSelectors(): void {
+        
+
+        // Declare and set the number of years
+        const numberOfYears = 100;
+
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+
+        // Populate the select element with year options
+        for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
+            const optionElement = document.createElement('option');
+            optionElement.value = i.toString();
+            optionElement.text = i.toString();
+            this.container.appendChild(optionElement);
+        }
+    }
     
-
-
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
@@ -76,6 +93,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.container.innerHTML = context.parameters.customCSSURL.raw || "I didnt find any css on the UpdateView, sorry brah.";//container
         this.container.style.height = context.parameters.customHeight.raw || "140";
         this.container.style.width = context.parameters.customWidth.raw || "140";
+
+        dateGenerator.getDayRange(2024, 2, this.container);
         this.notifyOutPutChanged();
     }
 
@@ -96,4 +115,5 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     {
         // Add code to cleanup control if necessary
     }
+        
 }

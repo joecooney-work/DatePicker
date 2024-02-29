@@ -43,7 +43,7 @@
       <code path="index.ts" order="1"/>
       <css path="css/customCSS.css" order="1" />      
       <!-- UNCOMMENT TO ADD MORE RESOURCES
-      <css src="https://github.com/tc-ca/Power-Pages-WET-Template/blob/main/web-files/wet-style.css" order="1" />
+      <css src="XXX" order="1" />
       <resx path="strings/DateSelector.1033.resx" version="1.0.0" />
       -->
     </resources>

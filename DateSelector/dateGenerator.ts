@@ -2,20 +2,18 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import React = require("react");
 /**
  * Author: Joe Cooney
- * CO author: Neil Hobson
  * Company: Microsoft
  * Date: 27.02.2024
  */
-export default class dateGenerator extends React.Component {
+export class dateGenerator {
         private yearSelect:HTMLTextAreaElement;
         private monthSelect:HTMLTextAreaElement;
         private daySelect:HTMLTextAreaElement;
     
-    public getDayRange(year: number, month: number, container:HTMLDivElement): HTMLDivElement {
+    static getDayRange(year: number, month: number, container:HTMLDivElement) {
     
         const _year = year;
-        const _month = month;
-    
+        const _month = month;    
         let daysInMonth;
     
         if (_month === 2) {
@@ -31,13 +29,12 @@ export default class dateGenerator extends React.Component {
             daysInMonth = 31;
         }
         
-        return this.buildHTMControl(container, daysInMonth);
+        this.buildHTMControl(container, daysInMonth);
         
     }
-    private buildHTMControl(container:HTMLDivElement, daysInMonth: number ): HTMLDivElement {
+    private static buildHTMControl(container:HTMLDivElement, daysInMonth: number ) {
         // Clear previous options
-        container.innerHTML = '';
-    
+        container.innerHTML = '';    
         // Populate with new options
         for (let i = 1; i <= daysInMonth; i++) {
             let optionElement = document.createElement('option');
@@ -45,8 +42,6 @@ export default class dateGenerator extends React.Component {
             optionElement.text = i.toString();
             container.appendChild(optionElement);
         }
-
-        return container;
     }
 
 }
