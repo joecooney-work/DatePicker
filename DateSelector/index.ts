@@ -11,21 +11,27 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
      * Global Vars
      */
     //HTML
-    private body = HTMLDivElement;
-    private dateselector:HTMLTextAreaElement;
-    private label:HTMLLabelElement;
-    //Logic
-    private container:HTMLDivElement;
-    private currentDateTime:HTMLTimeElement;
-    private context:ComponentFramework.Context<IInputs>;
+    //rivate myDiv = HTMLDivElement;
+    private mycontainer : HTMLDivElement;
+    private label: HTMLLabelElement;
+    private year: HTMLSelectElement;
+    private month: HTMLSelectElement;
+    private day: HTMLSelectElement;
+    private hour: HTMLSelectElement;
+    private controls: [];
+
+    //Context Logic
+    private container: HTMLDivElement;
+    private context: ComponentFramework.Context<IInputs>;
     private notifyOutPutChanged: () => void;
     private state: ComponentFramework.Dictionary;
+
     //private refreshData: EventListenerOrEventListenerObject;
     /**
      * Empty constructor.
      */
     constructor()
-    {
+    {        
 
     }
 
@@ -46,41 +52,60 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.container = container;
         //#endregion
         
-        //this.body = document.createElement("div");
-        // this.container.style.height = context.parameters.customHeight.raw || "240";
-        // this.container.style.width = context.parameters.customWidth.raw || "240";
-        this.container.style.color = "Black";
-        this.container.style.backgroundColor = "Blue";
+        // this.container.style.color = "Black";
+        // this.container.style.backgroundColor = "Blue";
         
 
-        this.createLabel();
-        //this.createSelectors();
-        //dateGenerator.getDayRange(2024, 2, this.container);
+        this.build();
         notifyOutputChanged();
+    }
+    public build(): void{
+        this.mycontainer = this.container;
+        this.createLabel();
+        this.createYear();
+        this.createMonth();
+
     }
     public createLabel(): void {
         //Build container
         this.label = document.createElement("label");
         this.label.innerHTML = "Date Picker Tool:";
-        this.container.appendChild(this.label);
+        this.mycontainer.appendChild(this.label);
     }
-    public createSelectors(): void {
-        
-
+    public createYear(): void {
         // Declare and set the number of years
-        const numberOfYears = 100;
-
+        const numberOfYears: number = this.context.parameters.numberOfYears.raw || 100; //"I didnt find any css on the UpdateView, sorry brah.";100;
         // Get the current year
         const currentYear = new Date().getFullYear();
+        this.year = document.createElement("select");
+        this.mycontainer.appendChild(this.year);
 
         // Populate the select element with year options
         for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString();
-            this.container.appendChild(optionElement);
-        }
+            this.year.appendChild(optionElement);
+        }   
+
     }
+    public createMonth(): void {
+        // Declare and set the number of years
+        const numberOfMonths: number = 12;
+        const currentYear = 0;
+        this.month = document.createElement("select");
+        this.mycontainer.appendChild(this.month);
+
+        // Populate the select element with year options
+        for (let i = currentYear; i <= numberOfMonths+1; i++) {
+            const optionElement = document.createElement('option');
+            optionElement.value = i.toString();
+            optionElement.text = i.toString();
+            this.month.appendChild(optionElement);
+        }
+        
+    }
+
     
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
@@ -88,14 +113,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
      */
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
-        // Add code to update control view
-        //this.label.innerHTML = context.parameters.customCSSURL.raw || "";//label
-        this.container.innerHTML = context.parameters.customCSSURL.raw || "I didnt find any css on the UpdateView, sorry brah.";//container
-        this.label.style.height = context.parameters.customHeight.raw || "140";
-        this.label.style.width = context.parameters.customWidth.raw || "140";
-
-        //dateGenerator.getDayRange(2024, 2, this.container);
-        this.notifyOutPutChanged();
+        //todo:
     }
 
     /**

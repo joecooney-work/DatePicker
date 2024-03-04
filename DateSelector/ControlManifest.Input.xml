@@ -18,17 +18,8 @@
       -->
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    <property name="customCSSURL" display-name-key="CSSURL_Display_Key" description-key="CSS URL to apply to control." of-type="SingleLine.Text" usage="bound" required="false" />
-    <property name="customHeight" display-name-key="Height_Display_Key" description-key="Custom Height to apply to control." of-type="SingleLine.Text" usage="bound" required="false" />
-    <property name="customWidth" display-name-key="Width_Display_Key" description-key="Custom Width to apply to control." of-type="SingleLine.Text" usage="bound" required="false" />
-    
-    <type-group name="numbers">
-        <type>Whole.None</type>
-        <type>Currency</type>
-        <type>FP</type>
-        <type>Decimal</type>
-      </type-group>
-    <!--
+    <property name="numberOfYears" display-name-key="NumberOfYears_Display_Key" description-key="Years to apply to control, input value will display X number of years in the selector." of-type="Whole.None" usage="bound" required="true" />   
+    <!-- <property name="customWidth" display-name-key="Width_Display_Key" description-key="Custom Width to apply to control." of-type="SingleLine.Text" usage="bound" required="false" /> -->    <!--
       Property node's of-type attribute can be of-type-group attribute.
       Example:
       <type-group name="numbers">
@@ -38,6 +29,7 @@
         <type>Decimal</type>
       </type-group>
       <property name="sampleProperty" display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type-group="numbers" usage="bound" required="true" />
+    <property name="customHeight" display-name-key="Height_Display_Key" description-key="Custom Height to apply to control." of-type="SingleLine.Text" usage="bound" required="false" />
     -->
     <resources>
       <code path="index.ts" order="1"/>
