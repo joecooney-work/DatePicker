@@ -51,20 +51,24 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.state = state;
         this.container = container;
         //#endregion
+        this.container.style.color = "Black";
+        this.container.style.backgroundColor = "Blue";
         
-        // this.container.style.color = "Black";
-        // this.container.style.backgroundColor = "Blue";
-        
-
         this.build();
-        notifyOutputChanged();
+        //notifyOutputChanged();
     }
-    public build(): void{
-        this.mycontainer = this.container;
+    public build(): void{        
+        this.createContainer();
         this.createLabel();
         this.createYear();
         this.createMonth();
 
+    }
+    public createContainer(): void {
+        this.mycontainer = document.createElement('div');
+        this.mycontainer.style.height = "300";
+        this.mycontainer.style.width = "300";
+        this.container.appendChild(this.mycontainer);
     }
     public createLabel(): void {
         //Build container
@@ -74,7 +78,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     }
     public createYear(): void {
         // Declare and set the number of years
-        const numberOfYears: number = this.context.parameters.numberOfYears.raw || 100; //"I didnt find any css on the UpdateView, sorry brah.";100;
+        const numberOfYears: number = this.context.parameters.numberOfYears.raw || 100;
         // Get the current year
         const currentYear = new Date().getFullYear();
         this.year = document.createElement("select");
@@ -97,7 +101,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.mycontainer.appendChild(this.month);
 
         // Populate the select element with year options
-        for (let i = currentYear; i <= numberOfMonths+1; i++) {
+        for (let i = currentYear; i < numberOfMonths+1; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString();
