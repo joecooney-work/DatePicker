@@ -14,6 +14,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private month: HTMLSelectElement;
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
+    private lock: HTMLButtonElement;
         
     //Context Logic
     private container: HTMLDivElement;
@@ -53,7 +54,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
             this.createLabel();
             this.createYear();
             this.createMonth();
-            this.createDay();                        
+            this.createDay();
+            this.createLockButton();                        
         } 
         else if (this.context.parameters.dayOnly.raw === 0) {
             this.createContainer();
@@ -62,6 +64,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
             this.createMonth();
             this.createDay();
             this.createHour();
+            this.createLockButton();
         }
         else {
             this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";
@@ -95,6 +98,13 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private createHour(): void {
         this.hour = dateGenerator.getHourControl();
         this.mycontainer.appendChild(this.hour);
+    }
+    private createLockButton(): void {
+            this.lock = document.createElement("button");
+            
+            this.lock.innerText = "Lock Time";
+            this.mycontainer.appendChild(this.lock);
+        
     }
 
     
