@@ -42,8 +42,6 @@ export class dateGenerator {
         const currentYear = new Date().getFullYear();
         let year = document.createElement("select");
         
-
-        // Populate the select element with year options
         for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
@@ -57,15 +55,25 @@ export class dateGenerator {
         const currentYear = 0;
         let month = document.createElement("select");        
 
-        // Populate the select element with year options
         for (let i = currentYear; i < numberOfMonths+1; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString();
             month.appendChild(optionElement);
         }
-
         return month;
+    }
+    static getHourControl(): HTMLSelectElement {
+        let hour = document.createElement("select");
+        const numberOfHours: number = 24;
+                
+        for (let i = 0; i < numberOfHours+1; i++) {
+            const optionElement = document.createElement('option');
+            optionElement.value = i.toString();
+            optionElement.text = i.toString() + ":00";
+            hour.appendChild(optionElement);
+        }
+        return hour;
     }
 }
 

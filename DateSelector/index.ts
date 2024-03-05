@@ -14,8 +14,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private month: HTMLSelectElement;
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
-    private controls: [];
-    
+        
     //Context Logic
     private container: HTMLDivElement;
     private context: ComponentFramework.Context<IInputs>;
@@ -39,20 +38,35 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
      * @param container If a control is marked control-type='standard', it will receive an empty div element within which it can render its content.
      */
     public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement): void
-    {
+    {        
         //#region - control initialization code 
         this.context = context;
         this.notifyOutPutChanged = notifyOutputChanged;
         this.state = state;
         this.container = container;
         //#endregion
-        this.container.style.color = "white";
-        this.container.style.backgroundColor = "Grey";        
-        this.createContainer();
-        this.createLabel();
-        this.createYear();
-        this.createMonth();
-        this.createDay();
+        //notes
+        if (this.context.parameters.dayOnly.raw === 1){
+            this.container.style.color = "white";
+            this.container.style.backgroundColor = "Grey";        
+            this.createContainer();
+            this.createLabel();
+            this.createYear();
+            this.createMonth();
+            this.createDay();                        
+        } 
+        else if (this.context.parameters.dayOnly.raw === 0) {
+            this.createContainer();
+            this.createLabel();
+            this.createYear();
+            this.createMonth();
+            this.createDay();
+            this.createHour();
+        }
+        else {
+            this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";
+        }
+        
     }
 
     private createContainer(): void {
@@ -77,6 +91,10 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private createDay(): void {
         this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));
         this.mycontainer.appendChild(this.day);
+    }
+    private createHour(): void {
+        this.hour = dateGenerator.getHourControl();
+        this.mycontainer.appendChild(this.hour);
     }
 
     
