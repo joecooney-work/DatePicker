@@ -5,36 +5,28 @@ import React = require("react");
  * Company: Microsoft
  * Date: 27.02.2024
  */
-export class dateGenerator {
-        private yearSelect:HTMLTextAreaElement;
-        private monthSelect:HTMLTextAreaElement;
-        private daySelect:HTMLTextAreaElement;
-    
-    static getDayRange(year: number, month: number, container:HTMLDivElement) {
-    
-        const _year = year;
-        const _month = month;    
+export class dateGenerator {   
+    static getDayControl(year: number, month: number): HTMLSelectElement {    
         let daysInMonth;
     
-        if (_month === 2) {
+        if (month === 2) {
             // Check for leap year
-            if ((_year % 4 === 0 && _year % 100 !== 0) || (_year % 400 === 0)) {
+            if ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) {
                 daysInMonth = 29;
             } else {
                 daysInMonth = 28;
             }
-        } else if ([4, 6, 9, 11].includes(_month)) {
+        } else if ([4, 6, 9, 11].includes(month)) {
             daysInMonth = 30;
         } else {
             daysInMonth = 31;
-        }
+        }        
         
-        this.buildHTMControl(container, daysInMonth);
-        
+        return this.buildDayControl(daysInMonth);
     }
-    private static buildHTMControl(container:HTMLDivElement, daysInMonth: number ) {
+    private static buildDayControl(daysInMonth: number ) : HTMLSelectElement {
         // Clear previous options
-        container.innerHTML = '';    
+        let container = document.createElement("select");   
         // Populate with new options
         for (let i = 1; i <= daysInMonth; i++) {
             let optionElement = document.createElement('option');
@@ -42,7 +34,38 @@ export class dateGenerator {
             optionElement.text = i.toString();
             container.appendChild(optionElement);
         }
-    }
 
+        return container;
+    }
+    static getYearControl(numberOfYears: number): HTMLSelectElement {
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+        let year = document.createElement("select");
+        
+
+        // Populate the select element with year options
+        for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
+            const optionElement = document.createElement('option');
+            optionElement.value = i.toString();
+            optionElement.text = i.toString();
+            year.appendChild(optionElement);
+        } 
+        return year;
+    }
+    static getMonthControl(): HTMLSelectElement {        
+        const numberOfMonths: number = 12;
+        const currentYear = 0;
+        let month = document.createElement("select");        
+
+        // Populate the select element with year options
+        for (let i = currentYear; i < numberOfMonths+1; i++) {
+            const optionElement = document.createElement('option');
+            optionElement.value = i.toString();
+            optionElement.text = i.toString();
+            month.appendChild(optionElement);
+        }
+
+        return month;
+    }
 }
 

@@ -6,12 +6,8 @@ import { dateGenerator } from "./dateGenerator";
  * Date: 27.02.2024
  */
 export class DateSelector implements ComponentFramework.StandardControl<IInputs, IOutputs> {
-
-    /**
-     * Global Vars
-     */
-    //HTML
-    //rivate myDiv = HTMLDivElement;
+   
+    //#region Global Vars
     private mycontainer : HTMLDivElement;
     private label: HTMLLabelElement;
     private year: HTMLSelectElement;
@@ -19,22 +15,21 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
     private controls: [];
-
+    
     //Context Logic
     private container: HTMLDivElement;
     private context: ComponentFramework.Context<IInputs>;
     private notifyOutPutChanged: () => void;
     private state: ComponentFramework.Dictionary;
+    //#endregion    
 
-    //private refreshData: EventListenerOrEventListenerObject;
-    /**
-     * Empty constructor.
-     */
+    //#region Constructor
     constructor()
     {        
 
     }
-
+    //#endregion
+    
     /**
      * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
      * Data-set values are not initialized here, use updateView.
@@ -51,63 +46,37 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.state = state;
         this.container = container;
         //#endregion
-        this.container.style.color = "Black";
-        this.container.style.backgroundColor = "Blue";
-        
-        this.build();
-        //notifyOutputChanged();
-    }
-    public build(): void{        
+        this.container.style.color = "white";
+        this.container.style.backgroundColor = "Grey";        
         this.createContainer();
         this.createLabel();
         this.createYear();
         this.createMonth();
-
+        this.createDay();
     }
-    public createContainer(): void {
-        this.mycontainer = document.createElement('div');
-        this.mycontainer.style.height = "300";
-        this.mycontainer.style.width = "300";
+
+    private createContainer(): void {
+        this.mycontainer = document.createElement('div');      
         this.container.appendChild(this.mycontainer);
     }
-    public createLabel(): void {
+    private createLabel(): void {
         //Build container
         this.label = document.createElement("label");
-        this.label.innerHTML = "Date Picker Tool:";
+        this.label.innerHTML = "<h3>Date Picker Tool:</h3>";
         this.mycontainer.appendChild(this.label);
     }
-    public createYear(): void {
-        // Declare and set the number of years
-        const numberOfYears: number = this.context.parameters.numberOfYears.raw || 100;
-        // Get the current year
-        const currentYear = new Date().getFullYear();
-        this.year = document.createElement("select");
+    private createYear(): void {
+        // Declare and set the number of years        
+        this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || 100);
         this.mycontainer.appendChild(this.year);
-
-        // Populate the select element with year options
-        for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
-            const optionElement = document.createElement('option');
-            optionElement.value = i.toString();
-            optionElement.text = i.toString();
-            this.year.appendChild(optionElement);
-        }   
-
     }
-    public createMonth(): void {
-        // Declare and set the number of years
-        const numberOfMonths: number = 12;
-        const currentYear = 0;
-        this.month = document.createElement("select");
-        this.mycontainer.appendChild(this.month);
-
-        // Populate the select element with year options
-        for (let i = currentYear; i < numberOfMonths+1; i++) {
-            const optionElement = document.createElement('option');
-            optionElement.value = i.toString();
-            optionElement.text = i.toString();
-            this.month.appendChild(optionElement);
-        }
-        
+    private createMonth(): void {
+        this.month = dateGenerator.getMonthControl();
+        this.mycontainer.appendChild(this.month);        
+    }
+    private createDay(): void {
+        this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));
+        this.mycontainer.appendChild(this.day);
     }
 
     
@@ -118,6 +87,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
         //todo:
+        this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));
+        
     }
 
     /**
