@@ -15,6 +15,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
     private lock: HTMLButtonElement;
+    private dayAndTimeValue: Date;
         
     //Context Logic
     private container: HTMLDivElement;
@@ -58,6 +59,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
             this.createLockButton();                        
         } 
         else if (this.context.parameters.dayOnly.raw === 0) {
+            this.container.style.color = "black";
+            this.container.style.backgroundColor = "lightgrey"; 
             this.createContainer();
             this.createLabel();
             this.createYear();
@@ -86,9 +89,11 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         // Declare and set the number of years        
         this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || 100);
         this.mycontainer.appendChild(this.year);
+        //todo - function to create day and set month to default
     }
     private createMonth(): void {
         this.month = dateGenerator.getMonthControl();
+        //todo - call back function to recreate day.
         this.mycontainer.appendChild(this.month);        
     }
     private createDay(): void {
@@ -100,12 +105,13 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.mycontainer.appendChild(this.hour);
     }
     private createLockButton(): void {
-            this.lock = document.createElement("button");
-            
+            this.lock = document.createElement("button");            
             this.lock.innerText = "Lock Time";
+
             this.mycontainer.appendChild(this.lock);
-        
+            //todo - create call back function to lock all controls, call getOutPuts to Save, trigger update of view on select
     }
+
 
     
     /**
@@ -125,7 +131,9 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
      */
     public getOutputs(): IOutputs
     {
-        return {};
+        return {
+            dayAndTime: this.dayAndTimeValue
+        };
     }
 
     /**
@@ -136,5 +144,6 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     {
         // Add code to cleanup control if necessary
     }
+
         
 }

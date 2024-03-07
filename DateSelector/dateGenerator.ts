@@ -39,7 +39,7 @@ export class dateGenerator {
     }
     static getYearControl(numberOfYears: number): HTMLSelectElement {
         // Get the current year
-        const currentYear = new Date().getFullYear();
+        const currentYear = new Date().getFullYear();        
         let year = document.createElement("select");
         
         for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
@@ -50,7 +50,8 @@ export class dateGenerator {
         } 
         return year;
     }
-    static getMonthControl(): HTMLSelectElement {        
+    static getMonthControl(): HTMLSelectElement {
+        //todo - add month names to each text value.        
         const numberOfMonths: number = 12;
         const currentYear = 0;
         let month = document.createElement("select");        
