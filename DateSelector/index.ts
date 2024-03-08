@@ -23,7 +23,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private hour: HTMLSelectElement;
     private lock: HTMLButtonElement;
     private dayAndTimeValue: Date;    
-    private callbackMonth = (event: Event) =>  {
+    private callbackCalculateNewDay = (event: Event) =>  {
         let monthvalue = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
         let newDay = dateGenerator.getDayControl(yearvalue, monthvalue);
@@ -90,18 +90,17 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.titleDateSelector.id = "titleDateSelector";
         this.container.appendChild(this.titleDateSelector);
     }
-    private createYear(): void {
-        // Declare and set the number of years        
+    private createYear(): void {   
         this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || 100);
         this.year.id = "year";
-        this.year.addEventListener("change", this.callbackMonth);
+        this.year.addEventListener("change", this.callbackCalculateNewDay);
         this.mycontainer.appendChild(this.year);
         
     }
     private createMonth(): void {
         this.month = dateGenerator.getMonthControl();
         this.month.id = "month";                       
-        this.month.addEventListener("change", this.callbackMonth);     
+        this.month.addEventListener("change", this.callbackCalculateNewDay);     
         this.mycontainer.appendChild(this.month);        
     }
     private createDay(): void {
