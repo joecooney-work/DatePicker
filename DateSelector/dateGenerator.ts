@@ -1,6 +1,5 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import React = require("react");
-//import { DateSelector } from ".";
 /**
  * Author: Joe Cooney
  * Company: Microsoft
@@ -77,6 +76,12 @@ export class dateGenerator {
             hour.appendChild(optionElement);
         }
         return hour;
+    }
+    static getLabel(text: string): HTMLLabelElement {
+        let label = document.createElement("label");
+        label.innerHTML = text;
+        
+        return label;
     }
 }
 

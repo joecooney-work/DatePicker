@@ -7,30 +7,46 @@ import { dateGenerator } from "./dateGenerator";
  */
 export class DateSelector implements ComponentFramework.StandardControl<IInputs, IOutputs> {
    
-    //#region Global Vars
+    //#region Vars
+    //Context Logic
+    private container: HTMLDivElement;
+    private context: ComponentFramework.Context<IInputs>;
+    private notifyOutPutChanged: () => void;//to Save...    
+    private state: ComponentFramework.Dictionary;
+    
+    //Global Vars 
     private mycontainer : HTMLDivElement;
-    private label: HTMLLabelElement;
+    private titleDateSelector: HTMLLabelElement;
     private year: HTMLSelectElement;
     private month: HTMLSelectElement;
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
     private lock: HTMLButtonElement;
-    public dayAndTimeValue: Date;
-    private callbackMonth: any = (event: Event) =>  {
+    private dayAndTimeValue: Date;    
+    private callbackMonth = (event: Event) =>  {
         let monthvalue = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
         let newDay = dateGenerator.getDayControl(yearvalue, monthvalue);
         let oldDay = document.getElementById("day");
         oldDay?.replaceWith(newDay);
     };
-        
-    //Context Logic
-    private container: HTMLDivElement;
-    private context: ComponentFramework.Context<IInputs>;
-    //SAVE: notifyOutPutChanged() => this function will send the parameters in the getOutPuts function to the bound Dataverse form control. (for e.x. - new_yourfieldname)
-    private notifyOutPutChanged: () => void;//to Save...    
-    private state: ComponentFramework.Dictionary;
-    //#endregion    
+    private callLock = (event: Event) => {        
+        const year = parseInt((document.getElementById("year") as HTMLSelectElement).value);
+        const month = parseInt((document.getElementById("month") as HTMLSelectElement).value);
+        const day = parseInt((document.getElementById("day") as HTMLSelectElement).value);
+        const hour = this.context.parameters.dayOnly.raw === 0 ? parseInt((document.getElementById('hour') as HTMLSelectElement).value) : 0;
+        // Validate the values
+        if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
+            alert('Please select valid values for all controls');
+        } else {
+            // Create the DateTime value
+            const dayAndTimeValue = new Date(year, month - 1, day, hour);
+            alert("DateTime Format: " + dayAndTimeValue);
+            this.dayAndTimeValue = dayAndTimeValue;
+            this.notifyOutPutChanged();//Save Data
+        }
+    };
+    //#endregion 
 
     //#region Constructor
     constructor()
@@ -55,26 +71,24 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.state = state;
         this.container = container;
         //#endregion 
-        this.createContainer();
-        this.createLabel();
+        this.createTitle();
+        this.createContainer();        
         this.createYear();
         this.createMonth();
         this.createDay();
         this.createHour();
         this.createLockButton();        
     }
-
     private createContainer(): void {
         this.mycontainer = document.createElement('div');
         this.mycontainer.id = "mycontainer";      
         this.container.appendChild(this.mycontainer);
     }
-    private createLabel(): void {
-        //Build container
-        this.label = document.createElement("label");
-        this.label.id = "label";
-        this.label.innerHTML = "<h3>Date "+ (this.context.parameters.dayOnly.raw === 0 ? "And Time" : "") +" Picker Tool:</h3>";
-        this.mycontainer.appendChild(this.label);
+    private createTitle(): void {
+        const message = "<h3>Date "+ (this.context.parameters.dayOnly.raw === 0 ? "And Time" : "") +" Picker Tool:</h3>";
+        this.titleDateSelector = dateGenerator.getLabel(message);
+        this.titleDateSelector.id = "titleDateSelector";
+        this.container.appendChild(this.titleDateSelector);
     }
     private createYear(): void {
         // Declare and set the number of years        
@@ -112,24 +126,18 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private createLockButton(): void {
             this.lock = document.createElement("button");
             this.lock.id = "mylockbutton";            
-            this.lock.innerText = "Lock Time";
-
+            this.lock.innerText = "Set Time";
+            this.lock.addEventListener("click", this.callLock);
             this.mycontainer.appendChild(this.lock);           
-    }
-    
-    public callbackLock() : void {        
-        this.dayAndTimeValue = new Date();
-    }    
+    } 
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
      */
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
-
         
     }
-
     /**
      * It is called by the framework prior to a control receiving new data.
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
@@ -140,7 +148,6 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
             dayAndTime: this.dayAndTimeValue
         };
     }
-
     /**
      * Called when the control is to be removed from the DOM tree. Controls should use this call for cleanup.
      * i.e. cancelling any pending remote calls, removing listeners, etc.
@@ -149,6 +156,4 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     {
         // Add code to cleanup control if necessary
     }
-
-        
 }
