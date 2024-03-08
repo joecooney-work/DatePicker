@@ -105,8 +105,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.callbackMonth = (event: Event) =>  {
             //alert('hello');
             let monthvalue =  parseInt((event.target as HTMLSelectElement).value);
-            //monthvalue = 2;
-            let newDay = dateGenerator.getDayControl(2024, monthvalue);
+            let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
+            let newDay = dateGenerator.getDayControl(yearvalue, monthvalue);
             let oldDay = document.getElementById("day");
             oldDay?.replaceWith(newDay);
         };
