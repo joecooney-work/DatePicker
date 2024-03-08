@@ -20,7 +20,7 @@
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
     <property name="numberOfYears" display-name-key="NumberOfYears_Display_Key" description-key="Years to apply to control, input value will display X number of years in the selector." of-type="Whole.None" usage="input" required="false" />
     <property name="dayOnly" display-name-key="DayOnly_Display_Key" description-key="0 for false and 1 for true, value must be provided if true field will only display date controls no hourly control." of-type="Whole.None" usage="input" required="true" />  
-    <property name="dayAndTime" display-name-key="DayAndTime_Display_Key" description-key="Will save Date And Time in control." of-type="DateAndTime.DateAndTime" usage="bound" required="false" />
+    <!-- <property name="dayAndTime" display-name-key="DayAndTime_Display_Key" description-key="Will save Date And Time in control." of-type="DateAndTime.DateAndTime" usage="bound" required="false" /> -->
     <!-- <property name="dateOnly" display-name-key="DateOnly_Display_Key" description-key="Date controls only, no hourly control." of-type="DateAndTime.DateOnly" usage="bound" required="true" />    -->
     <!-- <property name="customWidth" display-name-key="Width_Display_Key" description-key="Custom Width to apply to control." of-type="SingleLine.Text" usage="bound" required="false" /> -->    <!--
       Property node's of-type attribute can be of-type-group attribute.

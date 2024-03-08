@@ -1,5 +1,6 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import React = require("react");
+//import { DateSelector } from ".";
 /**
  * Author: Joe Cooney
  * Company: Microsoft
@@ -26,7 +27,8 @@ export class dateGenerator {
     }
     private static buildDayControl(daysInMonth: number ) : HTMLSelectElement {
         // Clear previous options
-        let container = document.createElement("select");   
+        let container = document.createElement("select");
+        container.id = "day";   
         // Populate with new options
         for (let i = 1; i <= daysInMonth; i++) {
             let optionElement = document.createElement('option');
@@ -41,6 +43,7 @@ export class dateGenerator {
         // Get the current year
         const currentYear = new Date().getFullYear();        
         let year = document.createElement("select");
+        year.id = "year";
         
         for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
             const optionElement = document.createElement('option');
@@ -55,11 +58,10 @@ export class dateGenerator {
         const numberOfMonths: number = 12;
         const currentYear = 0;
         let month = document.createElement("select");        
-
         for (let i = currentYear; i < numberOfMonths+1; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
-            optionElement.text = i.toString();
+            optionElement.text = i.toString();            
             month.appendChild(optionElement);
         }
         return month;

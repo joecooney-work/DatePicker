@@ -15,19 +15,23 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
     private lock: HTMLButtonElement;
-    private dayAndTimeValue: Date;
+    public dayAndTimeValue: Date;
+    private callbackMonth: any;
         
     //Context Logic
     private container: HTMLDivElement;
     private context: ComponentFramework.Context<IInputs>;
-    private notifyOutPutChanged: () => void;
+    private notifyOutPutChanged: () => void;    
     private state: ComponentFramework.Dictionary;
     //#endregion    
 
     //#region Constructor
     constructor()
-    {        
-
+    {
+        //#region How TO: 
+        //SAVE: notifyOutPutChanged() => this function will send the parameters in the getOutPuts function to the bound Dataverse form control. (for e.x. - new_yourfieldname)       
+        //
+        //#endregion
     }
     //#endregion
     
@@ -59,7 +63,6 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
             this.createLockButton();                        
         } 
         else if (this.context.parameters.dayOnly.raw === 0) {
-            this.container.style.color = "black";
             this.container.style.backgroundColor = "lightgrey"; 
             this.createContainer();
             this.createLabel();
@@ -76,52 +79,79 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     }
 
     private createContainer(): void {
-        this.mycontainer = document.createElement('div');      
+        this.mycontainer = document.createElement('div');
+        this.mycontainer.id = "mycontainer";      
         this.container.appendChild(this.mycontainer);
     }
     private createLabel(): void {
         //Build container
         this.label = document.createElement("label");
-        this.label.innerHTML = "<h3>Date Picker Tool:</h3>";
+        this.label.id = "label";
+        this.label.innerHTML = "<h3>Date "+ (this.context.parameters.dayOnly.raw === 0 ? "And Time" : "") +" Picker Tool:</h3>";
         this.mycontainer.appendChild(this.label);
     }
     private createYear(): void {
         // Declare and set the number of years        
         this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || 100);
+        this.year.id = "year";
         this.mycontainer.appendChild(this.year);
         //todo - function to create day and set month to default
     }
     private createMonth(): void {
         this.month = dateGenerator.getMonthControl();
-        //todo - call back function to recreate day.
+        this.month.id = "month";
+        let event: Event;
+        
+        this.callbackMonth = (event: Event) =>  {
+            //alert('hello');
+            let monthvalue =  parseInt((event.target as HTMLSelectElement).value);
+            //monthvalue = 2;
+            let newDay = dateGenerator.getDayControl(2024, monthvalue);
+            let oldDay = document.getElementById("day");
+            oldDay?.replaceWith(newDay);
+        };
+        
+        this.month.addEventListener("change", this.callbackMonth);     
         this.mycontainer.appendChild(this.month);        
     }
     private createDay(): void {
-        this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));
+        this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));        
         this.mycontainer.appendChild(this.day);
     }
     private createHour(): void {
         this.hour = dateGenerator.getHourControl();
+        this.hour.id = "hour";
         this.mycontainer.appendChild(this.hour);
     }
     private createLockButton(): void {
-            this.lock = document.createElement("button");            
+            this.lock = document.createElement("button");
+            this.lock.id = "mylockbutton";            
             this.lock.innerText = "Lock Time";
 
             this.mycontainer.appendChild(this.lock);
+           
             //todo - create call back function to lock all controls, call getOutPuts to Save, trigger update of view on select
     }
-
-
-    
+    // public callbackMonth(event: Event): void {
+    //     //alert('hello');
+    //     let monthvalue =  parseInt((event.target as HTMLSelectElement).value);
+    //     monthvalue = 2;
+    //     let newDay = dateGenerator.getDayControl(2024, monthvalue);
+    //     let oldDay = document.getElementById("day");
+    //     oldDay?.replaceWith(newDay);
+    // }
+    public callbackLock() : void {        
+        this.dayAndTimeValue = new Date();
+    }    
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
      */
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
+        alert("hello View!");
         //todo:
-        this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));
+        //this.day = dateGenerator.getDayControl(2024, 2);
         
     }
 
