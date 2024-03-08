@@ -56,9 +56,9 @@ export class dateGenerator {
     static getMonthControl(): HTMLSelectElement {
         //todo - add month names to each text value.        
         const numberOfMonths: number = 12;
-        const currentYear = 0;
+        const currentYear = 1;
         let month = document.createElement("select");        
-        for (let i = currentYear; i < numberOfMonths+1; i++) {
+        for (let i = currentYear; i < numberOfMonths; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString();            

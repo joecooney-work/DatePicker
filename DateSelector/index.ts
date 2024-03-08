@@ -16,22 +16,26 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private hour: HTMLSelectElement;
     private lock: HTMLButtonElement;
     public dayAndTimeValue: Date;
-    private callbackMonth: any;
+    private callbackMonth: any = (event: Event) =>  {
+        let monthvalue = parseInt((document.getElementById("month") as HTMLSelectElement).value);
+        let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
+        let newDay = dateGenerator.getDayControl(yearvalue, monthvalue);
+        let oldDay = document.getElementById("day");
+        oldDay?.replaceWith(newDay);
+    };
         
     //Context Logic
     private container: HTMLDivElement;
     private context: ComponentFramework.Context<IInputs>;
-    private notifyOutPutChanged: () => void;    
+    //SAVE: notifyOutPutChanged() => this function will send the parameters in the getOutPuts function to the bound Dataverse form control. (for e.x. - new_yourfieldname)
+    private notifyOutPutChanged: () => void;//to Save...    
     private state: ComponentFramework.Dictionary;
     //#endregion    
 
     //#region Constructor
     constructor()
     {
-        //#region How TO: 
-        //SAVE: notifyOutPutChanged() => this function will send the parameters in the getOutPuts function to the bound Dataverse form control. (for e.x. - new_yourfieldname)       
-        //
-        //#endregion
+
     }
     //#endregion
     
@@ -50,32 +54,14 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.notifyOutPutChanged = notifyOutputChanged;
         this.state = state;
         this.container = container;
-        //#endregion
-        //notes
-        if (this.context.parameters.dayOnly.raw === 1){
-            this.container.style.color = "white";
-            this.container.style.backgroundColor = "Grey";        
-            this.createContainer();
-            this.createLabel();
-            this.createYear();
-            this.createMonth();
-            this.createDay();
-            this.createLockButton();                        
-        } 
-        else if (this.context.parameters.dayOnly.raw === 0) {
-            this.container.style.backgroundColor = "lightgrey"; 
-            this.createContainer();
-            this.createLabel();
-            this.createYear();
-            this.createMonth();
-            this.createDay();
-            this.createHour();
-            this.createLockButton();
-        }
-        else {
-            this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";
-        }
-        
+        //#endregion 
+        this.createContainer();
+        this.createLabel();
+        this.createYear();
+        this.createMonth();
+        this.createDay();
+        this.createHour();
+        this.createLockButton();        
     }
 
     private createContainer(): void {
@@ -94,23 +80,13 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         // Declare and set the number of years        
         this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || 100);
         this.year.id = "year";
+        this.year.addEventListener("change", this.callbackMonth);
         this.mycontainer.appendChild(this.year);
-        //todo - function to create day and set month to default
+        
     }
     private createMonth(): void {
         this.month = dateGenerator.getMonthControl();
-        this.month.id = "month";
-        let event: Event;
-        
-        this.callbackMonth = (event: Event) =>  {
-            //alert('hello');
-            let monthvalue =  parseInt((event.target as HTMLSelectElement).value);
-            let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
-            let newDay = dateGenerator.getDayControl(yearvalue, monthvalue);
-            let oldDay = document.getElementById("day");
-            oldDay?.replaceWith(newDay);
-        };
-        
+        this.month.id = "month";                       
         this.month.addEventListener("change", this.callbackMonth);     
         this.mycontainer.appendChild(this.month);        
     }
@@ -119,27 +95,28 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.mycontainer.appendChild(this.day);
     }
     private createHour(): void {
-        this.hour = dateGenerator.getHourControl();
-        this.hour.id = "hour";
-        this.mycontainer.appendChild(this.hour);
+        if (this.context.parameters.dayOnly.raw === 1){
+            this.container.style.color = "white";
+            this.container.style.backgroundColor = "Grey";                              
+        } 
+        else if (this.context.parameters.dayOnly.raw === 0) {
+            this.container.style.backgroundColor = "lightgrey";
+            this.hour = dateGenerator.getHourControl();
+            this.hour.id = "hour";
+            this.mycontainer.appendChild(this.hour);
+        }
+        else {
+            this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";
+        }        
     }
     private createLockButton(): void {
             this.lock = document.createElement("button");
             this.lock.id = "mylockbutton";            
             this.lock.innerText = "Lock Time";
 
-            this.mycontainer.appendChild(this.lock);
-           
-            //todo - create call back function to lock all controls, call getOutPuts to Save, trigger update of view on select
+            this.mycontainer.appendChild(this.lock);           
     }
-    // public callbackMonth(event: Event): void {
-    //     //alert('hello');
-    //     let monthvalue =  parseInt((event.target as HTMLSelectElement).value);
-    //     monthvalue = 2;
-    //     let newDay = dateGenerator.getDayControl(2024, monthvalue);
-    //     let oldDay = document.getElementById("day");
-    //     oldDay?.replaceWith(newDay);
-    // }
+    
     public callbackLock() : void {        
         this.dayAndTimeValue = new Date();
     }    
@@ -149,9 +126,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
      */
     public updateView(context: ComponentFramework.Context<IInputs>): void
     {
-        alert("hello View!");
-        //todo:
-        //this.day = dateGenerator.getDayControl(2024, 2);
+
         
     }
 
