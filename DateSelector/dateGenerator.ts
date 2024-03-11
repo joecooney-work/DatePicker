@@ -77,6 +77,19 @@ export class dateGenerator {
         }
         return hour;
     }
+    /**
+     * Used to set value of HTMLSelectElement within given control.
+     * @param control HTML Select control's Id you wish to set the value.
+     * @param value value you wish to set your control to.
+     * @returns 
+     */
+    static setControlValue(controlid: string, value: string): void {
+        let control: HTMLSelectElement = document.getElementById(controlid) as HTMLSelectElement;
+        if (!control) 
+            alert('the provided Control ID could not be found, the value cannot be set, please contact customer support or refresh the page');
+        else
+            control.value = value;        
+    }
     static getLabel(text: string): HTMLLabelElement {
         let label = document.createElement("label");
         label.innerHTML = text;

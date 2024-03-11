@@ -22,7 +22,9 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
     private lock: HTMLButtonElement;
-    private dayAndTimeValue: Date;    
+    private dayAndTimeValue: Date;
+    private isDateOnly: boolean;  
+    private defaultYears: number = 100;  
     private callbackCalculateNewDay = (event: Event) =>  {
         let monthvalue = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
@@ -34,12 +36,12 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         const year = parseInt((document.getElementById("year") as HTMLSelectElement).value);
         const month = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         const day = parseInt((document.getElementById("day") as HTMLSelectElement).value);
-        const hour = this.context.parameters.dayOnly.raw === 0 ? parseInt((document.getElementById('hour') as HTMLSelectElement).value) : 0;
+        const hour = this.isDateOnly ? parseInt((document.getElementById('hour') as HTMLSelectElement).value) : 0;
         // Validate the values
         if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
             alert('Please select valid values for all controls');
         } else {
-            // Create the DateTime value
+            // Create the DateTime value            
             const dayAndTimeValue = new Date(year, month - 1, day, hour);
             alert("DateTime Format: " + dayAndTimeValue);
             this.dayAndTimeValue = dayAndTimeValue;
@@ -71,13 +73,19 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.state = state;
         this.container = container;
         //#endregion 
+        this.createForm();
+        this.loadFormValue();
+        this.formatForm();        
+    }
+    private createForm(): void {
+        this.isDateOnly = this.context.parameters.dayOnly.raw;
         this.createTitle();
         this.createContainer();        
         this.createYear();
         this.createMonth();
         this.createDay();
         this.createHour();
-        this.createLockButton();        
+        this.createLockButton();
     }
     private createContainer(): void {
         this.mycontainer = document.createElement('div');
@@ -85,13 +93,13 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.container.appendChild(this.mycontainer);
     }
     private createTitle(): void {
-        const message = "<h3>Date "+ (this.context.parameters.dayOnly.raw === 0 ? "And Time" : "") +" Picker Tool:</h3>";
+        const message = "<h3>Date "+ (!this.isDateOnly ? "And Time" : "") +" Picker Tool:</h3>";
         this.titleDateSelector = dateGenerator.getLabel(message);
         this.titleDateSelector.id = "titleDateSelector";
         this.container.appendChild(this.titleDateSelector);
     }
     private createYear(): void {   
-        this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || 100);
+        this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || this.defaultYears);
         this.year.id = "year";
         this.year.addEventListener("change", this.callbackCalculateNewDay);
         this.mycontainer.appendChild(this.year);
@@ -108,19 +116,9 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.mycontainer.appendChild(this.day);
     }
     private createHour(): void {
-        if (this.context.parameters.dayOnly.raw === 1){
-            this.container.style.color = "white";
-            this.container.style.backgroundColor = "Grey";                              
-        } 
-        else if (this.context.parameters.dayOnly.raw === 0) {
-            this.container.style.backgroundColor = "lightgrey";
-            this.hour = dateGenerator.getHourControl();
-            this.hour.id = "hour";
-            this.mycontainer.appendChild(this.hour);
-        }
-        else {
-            this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";
-        }        
+        this.hour = dateGenerator.getHourControl();
+        this.hour.id = "hour";
+        this.mycontainer.appendChild(this.hour);                
     }
     private createLockButton(): void {
             this.lock = document.createElement("button");
@@ -129,6 +127,35 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
             this.lock.addEventListener("click", this.callLock);
             this.mycontainer.appendChild(this.lock);           
     } 
+    private loadFormValue(): void {
+        const time = this.context.parameters.dayAndTime.raw;
+        if (time == null) return;        
+        const year: number = this.context.parameters.dayAndTime.raw?.getFullYear() || 0;
+        const month: number = this.context.parameters.dayAndTime.raw?.getMonth() || 0;        
+        const day = this.context.parameters.dayAndTime.raw?.getDate() || 0;
+        const hour = this.context.parameters.dayAndTime.raw?.getHours() || 0;
+        
+        dateGenerator.setControlValue("year", year.toString() || "0");
+        dateGenerator.setControlValue("month", (month + 1).toString() || "0");//getMonth is 0 based.
+        dateGenerator.setControlValue("day", day.toString() || "0");
+        dateGenerator.setControlValue("hour", hour.toString() || "0");
+    }
+   
+    private formatForm(): void {
+        if (!this.isDateOnly){
+            this.container.style.color = "white";
+            this.container.style.backgroundColor = "Grey";
+
+        } 
+        else if (this.isDateOnly) {
+            this.container.style.backgroundColor = "lightgrey";
+            this.hour.style.setProperty("display", this.isDateOnly ? "block" : "none")
+        }
+        else {
+            this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";
+        }
+    }
+    
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
