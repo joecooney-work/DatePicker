@@ -128,12 +128,12 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
             this.mycontainer.appendChild(this.lock);           
     } 
     private loadFormValue(): void {
-        const time = this.context.parameters.dayAndTime.raw;
+        const time = this.context.parameters.dayAndTimeOutputValue.raw;
         if (time == null) return;        
-        const year: number = this.context.parameters.dayAndTime.raw?.getFullYear() || 0;
-        const month: number = this.context.parameters.dayAndTime.raw?.getMonth() || 0;        
-        const day = this.context.parameters.dayAndTime.raw?.getDate() || 0;
-        const hour = this.context.parameters.dayAndTime.raw?.getHours() || 0;
+        const year: number = this.context.parameters.dayAndTimeOutputValue.raw?.getFullYear() || 0;
+        const month: number = this.context.parameters.dayAndTimeOutputValue.raw?.getMonth() || 0;        
+        const day = this.context.parameters.dayAndTimeOutputValue.raw?.getDate() || 0;
+        const hour = this.context.parameters.dayAndTimeOutputValue.raw?.getHours() || 0;
         
         dateGenerator.setControlValue("year", year.toString() || "0");
         dateGenerator.setControlValue("month", (month + 1).toString() || "0");//getMonth is 0 based.
@@ -171,7 +171,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     public getOutputs(): IOutputs
     {
         return {
-            dayAndTime: this.dayAndTimeValue
+            dayAndTimeOutputValue: this.dayAndTimeValue
         };
     }
     /**
