@@ -118,7 +118,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private createHour(): void {
         this.hour = dateGenerator.getHourControl();
         this.hour.id = "hour";
-        this.mycontainer.appendChild(this.hour);                
+        this.mycontainer.appendChild(this.hour);
+        this.hour.style.setProperty("display", this.isDateOnly ? "block" : "none")                
     }
     private createLockButton(): void {
             this.lock = document.createElement("button");
@@ -148,8 +149,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
 
         } 
         else if (this.isDateOnly) {
-            this.container.style.backgroundColor = "lightgrey";
-            this.hour.style.setProperty("display", this.isDateOnly ? "block" : "none")
+            this.container.style.backgroundColor = "lightgrey";            
         }
         else {
             this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";

@@ -57,7 +57,7 @@ export class dateGenerator {
         const numberOfMonths: number = 12;
         const currentYear = 1;
         let month = document.createElement("select");        
-        for (let i = currentYear; i < numberOfMonths; i++) {
+        for (let i = currentYear; i <= numberOfMonths; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString();            
