@@ -119,7 +119,8 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.hour = dateGenerator.getHourControl();
         this.hour.id = "hour";
         this.mycontainer.appendChild(this.hour);
-        this.hour.style.setProperty("display", this.isDateOnly ? "block" : "none")                
+        if(this.isDateOnly)
+            this.hour.style.setProperty("display", "none");                
     }
     private createLockButton(): void {
             this.lock = document.createElement("button");
