@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="DateSelector" constructor="DateSelector" version="0.0.1" display-name-key="DateSelector" description-key="DateSelector description" control-type="standard" >
+  <control namespace="DateSelector" constructor="DateSelector" version="1.0.0.2" display-name-key="DateSelector" description-key="DateSelector PCF control that sets a datetime field based off user inut. JC 2024" control-type="standard">
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
@@ -22,6 +22,10 @@
     <property name="dayAndTimeOutputValue" display-name-key="dayAndTimeOutputValue_Display_Key" description-key="Will save Date And Time in control." of-type="DateAndTime.DateAndTime" usage="bound" required="false" />
     <property name="dayOnly" display-name-key="DayOnly_Display_Key" description-key="True means day only, false means Date and Time should be shown." of-type="TwoOptions" usage="input" required="true" />
 
+      <type-group name="numbers">
+        <type>DateAndTime.DateAndTime</type>
+        <!-- <type>DateAndTime.DateOnly</type> -->
+      </type-group>
     <!-- <property name="dateOnly" display-name-key="DateOnly_Display_Key" description-key="Date controls only, no hourly control." of-type="DateAndTime.DateOnly" usage="bound" required="true" />    -->
     <!-- <property name="customWidth" display-name-key="Width_Display_Key" description-key="Custom Width to apply to control." of-type="SingleLine.Text" usage="bound" required="false" /> -->    <!--
       Property node's of-type attribute can be of-type-group attribute.
