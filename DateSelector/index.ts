@@ -36,7 +36,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         const year = parseInt((document.getElementById("year") as HTMLSelectElement).value);
         const month = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         const day = parseInt((document.getElementById("day") as HTMLSelectElement).value);
-        const hour = this.isDateOnly ? parseInt((document.getElementById('hour') as HTMLSelectElement).value) : 0;
+        const hour = this.isDateOnly ? 0 : parseInt((document.getElementById('hour') as HTMLSelectElement).value);
         // Validate the values
         if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
             alert('Please select valid values for all controls');
@@ -78,9 +78,9 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.formatForm();        
     }
     private createForm(): void {
-        this.isDateOnly = this.context.parameters.dayOnly.raw;
-        this.createTitle();
-        this.createContainer();        
+        this.isDateOnly = this.context.parameters.isDayOnly.raw;
+        this.createContainer();
+        this.createTitle();                
         this.createYear();
         this.createMonth();
         this.createDay();
@@ -89,14 +89,16 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     }
     private createContainer(): void {
         this.mycontainer = document.createElement('div');
-        this.mycontainer.id = "mycontainer";      
+        this.mycontainer.id = "mycontainer";
+        //this.mycontainer.style.justifyContent = "center";//horizontal alignment change.
+        this.mycontainer.style.alignContent = "center";//horizontal alignment change.      
         this.container.appendChild(this.mycontainer);
     }
     private createTitle(): void {
         const message = "<h3>Date "+ (!this.isDateOnly ? "And Time" : "") +" Picker Tool:</h3>";
         this.titleDateSelector = dateGenerator.getLabel(message);
         this.titleDateSelector.id = "titleDateSelector";
-        this.container.appendChild(this.titleDateSelector);
+        this.mycontainer.appendChild(this.titleDateSelector);
     }
     private createYear(): void {   
         this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || this.defaultYears);
