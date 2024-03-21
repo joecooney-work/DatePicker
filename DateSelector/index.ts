@@ -11,7 +11,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     //Context Logic
     private container: HTMLDivElement;
     private context: ComponentFramework.Context<IInputs>;
-    private notifyOutPutChanged: () => void;//to Save...    
+    private notifyOutPutChanged: () => void;//to notify form of control change...    
     private state: ComponentFramework.Dictionary;
     
     //Global Vars 
@@ -21,18 +21,18 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private month: HTMLSelectElement;
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
-    private lock: HTMLButtonElement;
+    private setValueButton: HTMLButtonElement;
     private dayAndTimeValue: Date;
     private isDateOnly: boolean;  
     private defaultYears: number = 100;  
-    private callbackCalculateNewDay = (event: Event) =>  {
+    private calculateNewDay = () =>  {
         let monthvalue = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
         let newDay = dateGenerator.getDayControl(yearvalue, monthvalue);
         let oldDay = document.getElementById("day");
         oldDay?.replaceWith(newDay);
     };
-    private callLock = (event: Event) => {        
+    private callSet = () => {        
         const year = parseInt((document.getElementById("year") as HTMLSelectElement).value);
         const month = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         const day = parseInt((document.getElementById("day") as HTMLSelectElement).value);
@@ -43,7 +43,6 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         } else {
             // Create the DateTime value            
             const dayAndTimeValue = new Date(year, month - 1, day, hour);
-            alert("DateTime Format: " + dayAndTimeValue);
             this.dayAndTimeValue = dayAndTimeValue;
             this.notifyOutPutChanged();//Save Data
         }
@@ -85,12 +84,11 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.createMonth();
         this.createDay();
         this.createHour();
-        this.createLockButton();
+        this.createSetButton();
     }
     private createContainer(): void {
         this.mycontainer = document.createElement('div');
         this.mycontainer.id = "mycontainer";
-        //this.mycontainer.style.justifyContent = "center";//horizontal alignment change.
         this.mycontainer.style.alignContent = "center";//horizontal alignment change.      
         this.container.appendChild(this.mycontainer);
     }
@@ -103,14 +101,13 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private createYear(): void {   
         this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || this.defaultYears);
         this.year.id = "year";
-        this.year.addEventListener("change", this.callbackCalculateNewDay);
-        this.mycontainer.appendChild(this.year);
-        
+        this.year.addEventListener("change", this.calculateNewDay);
+        this.mycontainer.appendChild(this.year);        
     }
     private createMonth(): void {
         this.month = dateGenerator.getMonthControl();
         this.month.id = "month";                       
-        this.month.addEventListener("change", this.callbackCalculateNewDay);     
+        this.month.addEventListener("change", this.calculateNewDay);     
         this.mycontainer.appendChild(this.month);        
     }
     private createDay(): void {
@@ -119,17 +116,17 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     }
     private createHour(): void {
         this.hour = dateGenerator.getHourControl();
-        this.hour.id = "hour";
+        this.hour.id = "hour";        
+        if(this.isDateOnly) 
+            this.hour.style.setProperty("display", "none");
         this.mycontainer.appendChild(this.hour);
-        if(this.isDateOnly)
-            this.hour.style.setProperty("display", "none");                
     }
-    private createLockButton(): void {
-            this.lock = document.createElement("button");
-            this.lock.id = "mylockbutton";            
-            this.lock.innerText = "Set Time";
-            this.lock.addEventListener("click", this.callLock);
-            this.mycontainer.appendChild(this.lock);           
+    private createSetButton(): void {
+            this.setValueButton = document.createElement("button");
+            this.setValueButton.id = "setbutton";            
+            this.setValueButton.innerText = "Set Time";
+            this.setValueButton.addEventListener("click", this.callSet);
+            this.mycontainer.appendChild(this.setValueButton);           
     } 
     private loadFormValue(): void {
         const time = this.context.parameters.dayAndTimeOutputValue.raw;
@@ -141,6 +138,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         
         dateGenerator.setControlValue("year", year.toString() || "0");
         dateGenerator.setControlValue("month", (month + 1).toString() || "0");//getMonth is 0 based.
+        this.calculateNewDay();//set day control based on month/year values
         dateGenerator.setControlValue("day", day.toString() || "0");
         dateGenerator.setControlValue("hour", hour.toString() || "0");
     }
