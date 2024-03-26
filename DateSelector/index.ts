@@ -22,9 +22,10 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private day: HTMLSelectElement;
     private hour: HTMLSelectElement;
     private setValueButton: HTMLButtonElement;
+    private table: HTMLTableElement;
     private dayAndTimeValue: Date;
     private isDateOnly: boolean;  
-    private defaultYears: number = 100;  
+    private defaultYears: number = 100;      
     private calculateNewDay = () =>  {
         let monthvalue = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
@@ -84,6 +85,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.createMonth();
         this.createDay();
         this.createHour();
+        this.createTable();
         this.createSetButton();
     }
     private createContainer(): void {
@@ -98,28 +100,58 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.titleDateSelector.id = "titleDateSelector";
         this.mycontainer.appendChild(this.titleDateSelector);
     }
+    private createTable(): void {
+        this.createTableHeader();        
+        this.createTablebody();
+    } 
+    private createTableHeader(): void {
+        // Create the table
+        this.table = document.createElement('table');
+        let thead = document.createElement('thead');
+        let headerRow = document.createElement('tr');
+        ["Year", "Month", "Day", "Hour"].forEach(text => {
+            let th = document.createElement('th');
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        this.table.appendChild(thead);        
+    }
+    private createTablebody(): void {
+        // Create the table body
+        let tbody = document.createElement('tbody');
+        let row = document.createElement('tr');        
+        [this.year, this.month, this.day, this.hour].forEach(selectelement => {
+            let td = document.createElement('td');
+            td.append(selectelement);
+            row.appendChild(td);            
+        });
+        tbody.appendChild(row);
+        this.table.appendChild(tbody);       
+        this.mycontainer.appendChild(this.table);        
+    }   
     private createYear(): void {   
         this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || this.defaultYears);
         this.year.id = "year";
         this.year.addEventListener("change", this.calculateNewDay);
-        this.mycontainer.appendChild(this.year);        
+        //this.mycontainer.appendChild(this.year);        
     }
     private createMonth(): void {
         this.month = dateGenerator.getMonthControl();
         this.month.id = "month";                       
         this.month.addEventListener("change", this.calculateNewDay);     
-        this.mycontainer.appendChild(this.month);        
+        //this.mycontainer.appendChild(this.month);        
     }
     private createDay(): void {
         this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));        
-        this.mycontainer.appendChild(this.day);
+        //this.mycontainer.appendChild(this.day);
     }
     private createHour(): void {
         this.hour = dateGenerator.getHourControl();
         this.hour.id = "hour";        
         if(this.isDateOnly) 
             this.hour.style.setProperty("display", "none");
-        this.mycontainer.appendChild(this.hour);
+        //this.mycontainer.appendChild(this.hour);
     }
     private createSetButton(): void {
             this.setValueButton = document.createElement("button");

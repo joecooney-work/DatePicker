@@ -12,10 +12,6 @@
       </external-service-usage>
     -->
     <external-service-usage enabled="false">
-      <!--UNCOMMENT TO ADD EXTERNAL DOMAINS
-      <domain></domain>
-      <domain></domain>
-      -->
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
     <property name="numberOfYears" display-name-key="NumberOfYears_Display_Key" description-key="Years to apply to control, input value will display X number of years in the selector." of-type="Whole.None" usage="input" required="false" />
