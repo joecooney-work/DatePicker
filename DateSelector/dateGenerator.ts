@@ -29,6 +29,7 @@ export class dateGenerator {
         let container = document.createElement("select");
         container.id = "day";  
         container.className = className; 
+
         // Populate with new options
         for (let i = 1; i <= daysInMonth; i++) {
             let optionElement = document.createElement('option');
@@ -45,12 +46,14 @@ export class dateGenerator {
         let year = document.createElement("select");
         year.id = "year";
         year.className = className;
+
         for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString();
             year.appendChild(optionElement);
         } 
+
         return year;
     }
     static getMonthControl(className: string): HTMLSelectElement {
@@ -60,25 +63,29 @@ export class dateGenerator {
         let month = document.createElement("select");
         month.id = "month";
         month.className = className;
+
         for (let i = currentYear; i <= numberOfMonths; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString();            
             month.appendChild(optionElement);
         }
+
         return month;
     }
     static getHourControl(className: string): HTMLSelectElement {
         let hour = document.createElement("select");
         hour.id = "hour";
         hour.className = className;
-        const numberOfHours: number = 24;                
+        const numberOfHours: number = 24;  
+
         for (let i = 0; i < numberOfHours+1; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
             optionElement.text = i.toString() + ":00";
             hour.appendChild(optionElement);
         }
+        
         return hour;
     }
     /**
