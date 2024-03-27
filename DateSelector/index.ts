@@ -1,5 +1,6 @@
 import {IInputs, IOutputs} from "./generated/ManifestTypes";
 import { dateGenerator } from "./dateGenerator";
+import { equal } from "assert";
 /**
  * Author: Joe Cooney
  * Company: Microsoft
@@ -29,7 +30,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private calculateNewDay = () =>  {
         let monthvalue = parseInt((document.getElementById("month") as HTMLSelectElement).value);
         let yearvalue = parseInt((document.getElementById("year") as HTMLSelectElement).value);
-        let newDay = dateGenerator.getDayControl(yearvalue, monthvalue);
+        let newDay = dateGenerator.getDayControl(yearvalue, monthvalue,"myselectors");
         let oldDay = document.getElementById("day");
         oldDay?.replaceWith(newDay);
     };
@@ -75,7 +76,6 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         //#endregion 
         this.createForm();
         this.loadFormValue();
-        this.formatForm();        
     }
     private createForm(): void {
         this.isDateOnly = this.context.parameters.isDayOnly.raw;
@@ -91,7 +91,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
     private createContainer(): void {
         this.mycontainer = document.createElement('div');
         this.mycontainer.id = "mycontainer";
-        this.mycontainer.style.alignContent = "center";//horizontal alignment change.      
+        this.mycontainer.className = "mycontainer"; 
         this.container.appendChild(this.mycontainer);
     }
     private createTitle(): void {
@@ -105,58 +105,59 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.createTablebody();
     } 
     private createTableHeader(): void {
-        // Create the table
         this.table = document.createElement('table');
         let thead = document.createElement('thead');
         let headerRow = document.createElement('tr');
-        ["Year", "Month", "Day", "Hour"].forEach(text => {
+        ["Year", "Month", "Day", "Hour"].forEach(text => {             
             let th = document.createElement('th');
             th.textContent = text;
-            headerRow.appendChild(th);
+            if(text !== "Hour" || text === "Hour" && !this.isDateOnly)            
+                headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
         this.table.appendChild(thead);        
     }
     private createTablebody(): void {
-        // Create the table body
         let tbody = document.createElement('tbody');
         let row = document.createElement('tr');        
         [this.year, this.month, this.day, this.hour].forEach(selectelement => {
             let td = document.createElement('td');
             td.append(selectelement);
-            row.appendChild(td);            
+            if(selectelement.id.toLowerCase() !== "hour" || selectelement.id.toLowerCase() === "hour" && !this.isDateOnly) 
+                row.appendChild(td);            
         });
         tbody.appendChild(row);
         this.table.appendChild(tbody);       
         this.mycontainer.appendChild(this.table);        
     }   
     private createYear(): void {   
-        this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || this.defaultYears);
+        this.year = dateGenerator.getYearControl(this.context.parameters.numberOfYears.raw || this.defaultYears,"myselectors");
         this.year.id = "year";
+        this.year.className = "myselectors";
         this.year.addEventListener("change", this.calculateNewDay);
-        //this.mycontainer.appendChild(this.year);        
     }
     private createMonth(): void {
-        this.month = dateGenerator.getMonthControl();
-        this.month.id = "month";                       
+        this.month = dateGenerator.getMonthControl("myselectors");
+        this.month.id = "month";                   
+        this.month.className = "myselectors";    
         this.month.addEventListener("change", this.calculateNewDay);     
-        //this.mycontainer.appendChild(this.month);        
     }
     private createDay(): void {
-        this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value));        
-        //this.mycontainer.appendChild(this.day);
+        this.day = dateGenerator.getDayControl(parseInt(this.year.value), parseInt(this.month.value),"myselectors"); 
+        this.day.className = "myselectors";       
     }
     private createHour(): void {
-        this.hour = dateGenerator.getHourControl();
-        this.hour.id = "hour";        
+        this.hour = dateGenerator.getHourControl("myselectors");
+        this.hour.id = "hour";      
+        this.hour.className = "myselectors";  
         if(this.isDateOnly) 
             this.hour.style.setProperty("display", "none");
-        //this.mycontainer.appendChild(this.hour);
     }
     private createSetButton(): void {
             this.setValueButton = document.createElement("button");
             this.setValueButton.id = "setbutton";            
             this.setValueButton.innerText = "Set Time";
+            this.setValueButton.className = "mybutton";
             this.setValueButton.addEventListener("click", this.callSet);
             this.mycontainer.appendChild(this.setValueButton);           
     } 
@@ -173,22 +174,7 @@ export class DateSelector implements ComponentFramework.StandardControl<IInputs,
         this.calculateNewDay();//set day control based on month/year values
         dateGenerator.setControlValue("day", day.toString() || "0");
         dateGenerator.setControlValue("hour", hour.toString() || "0");
-    }
-   
-    private formatForm(): void {
-        if (!this.isDateOnly){
-            this.container.style.color = "white";
-            this.container.style.backgroundColor = "Grey";
-
-        } 
-        else if (this.isDateOnly) {
-            this.container.style.backgroundColor = "lightgrey";            
-        }
-        else {
-            this.container.innerHTML = "you must set the context parameter DayOnly to be either 1 or 0, please update the value and refresh the session.";
-        }
-    }
-    
+    }    
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions

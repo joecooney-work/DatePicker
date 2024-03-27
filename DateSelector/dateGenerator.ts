@@ -6,7 +6,7 @@ import React = require("react");
  * Date: 27.02.2024
  */
 export class dateGenerator {   
-    static getDayControl(year: number, month: number): HTMLSelectElement {    
+    static getDayControl(year: number, month: number, className: string): HTMLSelectElement {    
         let daysInMonth;
     
         if (month === 2) {
@@ -22,12 +22,13 @@ export class dateGenerator {
             daysInMonth = 31;
         }        
         
-        return this.buildDayControl(daysInMonth);
+        return this.buildDayControl(daysInMonth, className);
     }
-    private static buildDayControl(daysInMonth: number ) : HTMLSelectElement {
+    private static buildDayControl(daysInMonth: number, className: string) : HTMLSelectElement {
         // Clear previous options
         let container = document.createElement("select");
-        container.id = "day";   
+        container.id = "day";  
+        container.className = className; 
         // Populate with new options
         for (let i = 1; i <= daysInMonth; i++) {
             let optionElement = document.createElement('option');
@@ -38,12 +39,12 @@ export class dateGenerator {
 
         return container;
     }
-    static getYearControl(numberOfYears: number): HTMLSelectElement {
+    static getYearControl(numberOfYears: number, className: string): HTMLSelectElement {
         // Get the current year
         const currentYear = new Date().getFullYear();        
         let year = document.createElement("select");
         year.id = "year";
-        
+        year.className = className;
         for (let i = currentYear; i >= currentYear - numberOfYears + 1; i--) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
@@ -52,11 +53,13 @@ export class dateGenerator {
         } 
         return year;
     }
-    static getMonthControl(): HTMLSelectElement {
+    static getMonthControl(className: string): HTMLSelectElement {
         //todo - add month names to each text value.        
         const numberOfMonths: number = 12;
         const currentYear = 1;
-        let month = document.createElement("select");        
+        let month = document.createElement("select");
+        month.id = "month";
+        month.className = className;
         for (let i = currentYear; i <= numberOfMonths; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
@@ -65,10 +68,11 @@ export class dateGenerator {
         }
         return month;
     }
-    static getHourControl(): HTMLSelectElement {
+    static getHourControl(className: string): HTMLSelectElement {
         let hour = document.createElement("select");
-        const numberOfHours: number = 24;
-                
+        hour.id = "hour";
+        hour.className = className;
+        const numberOfHours: number = 24;                
         for (let i = 0; i < numberOfHours+1; i++) {
             const optionElement = document.createElement('option');
             optionElement.value = i.toString();
@@ -85,9 +89,7 @@ export class dateGenerator {
      */
     static setControlValue(controlid: string, value: string): void {
         let control: HTMLSelectElement = document.getElementById(controlid) as HTMLSelectElement;
-        if (!control) 
-            alert('the provided Control ID could not be found, the value cannot be set, please contact customer support or refresh the page');
-        else
+        if (control)             
             control.value = value;        
     }
     static getLabel(text: string): HTMLLabelElement {
